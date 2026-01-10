@@ -1,0 +1,38 @@
+package com.astro.news.data.remote.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ArticleResponseDto(
+    @SerialName("count")
+    val count: Int,
+    @SerialName("next")
+    val next: String?,
+    @SerialName("previous")
+    val previous: String?,
+    @SerialName("results")
+    val results: List<ArticleDto>
+)
+
+@Serializable
+data class ArticleDto(
+    @SerialName("id")
+    val id: Int,
+    @SerialName("title")
+    val title: String,
+    @SerialName("url")
+    val url: String,
+    @SerialName("image_url")
+    val imageUrl: String?,
+    @SerialName("news_site")
+    val newsSite: String?,
+    @SerialName("summary")
+    val summary: String?,
+    @SerialName("published_at")
+    val publishedAt: String,
+    @SerialName("updated_at")
+    val updatedAt: String?,
+    @SerialName("featured")
+    val featured: Boolean = false
+)
