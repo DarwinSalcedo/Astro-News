@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Astro News"
-include(":app")
+include(":app", ":core", ":domain", ":data", ":feature")
