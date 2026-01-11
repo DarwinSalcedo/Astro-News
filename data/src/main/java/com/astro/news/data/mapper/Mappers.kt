@@ -12,9 +12,7 @@ fun ArticleResponseDto.toEntity(): ArticleEntity {
         imageUrl = imageUrl ?: "",
         newsSite = newsSite ?: "",
         summary = summary ?: "",
-        publishedAt = publishedAt,
-        updatedAt = updatedAt ?: "",
-        featured = featured
+        publishedAt = publishedAt
     )
 }
 
@@ -26,8 +24,6 @@ fun ArticleEntity.toDomain(): Article {
         imageUrl = imageUrl,
         newsSite = newsSite,
         summary = summary,
-        publishedAt = publishedAt,
-        updatedAt = updatedAt,
-        featured = featured
+        publishedAt = publishedAt
     )
 }

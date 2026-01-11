@@ -18,9 +18,5 @@ data class ArticleResponseDto(
     @SerialName("summary")
     val summary: String?,
     @SerialName("published_at")
-    val publishedAt: String,
-    @SerialName("updated_at")
-    val updatedAt: String?,
-    @SerialName("featured")
-    val featured: Boolean = false
+    val publishedAt: String
 )

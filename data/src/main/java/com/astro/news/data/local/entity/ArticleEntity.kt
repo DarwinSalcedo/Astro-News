@@ -2,7 +2,6 @@ package com.astro.news.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.astro.news.domain.model.Article
 
 @Entity(tableName = "articles")
 data class ArticleEntity(
@@ -13,9 +12,5 @@ data class ArticleEntity(
     val imageUrl: String,
     val newsSite: String,
     val summary: String,
-    val publishedAt: String,
-    val updatedAt: String,
-    val featured: Boolean
+    val publishedAt: String
 )
-
-
