@@ -9,6 +9,7 @@ import com.astro.news.data.local.AstroDatabase
 import com.astro.news.data.mapper.toDomain
 import com.astro.news.data.paging.ArticleRemoteMediator
 import com.astro.news.data.remote.SpaceflightNewsApiService
+import com.astro.news.domain.exception.NotFoundArticleException
 import com.astro.news.domain.model.Article
 import com.astro.news.domain.repository.ArticleRepository
 import com.astro.news.domain.util.Result
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 class ArticleRepositoryImpl @Inject constructor(
     private val api: SpaceflightNewsApiService,
-    private val database: AstroDatabase
+    private val database: AstroDatabase,
 ) : ArticleRepository {
     companion object {
         const val PAGE_SIZE = 20
@@ -55,7 +56,10 @@ class ArticleRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getArticle(id: Int): Result<Article> {
-        return Result.Error(Exception("Not implemented"))
+        val article = database.articleDao.getArticleById(id)
+        return if(article != null) Result.Success(article.toDomain())
+        else
+            Result.Error(NotFoundArticleException(id.toString()))
     }
 
 }

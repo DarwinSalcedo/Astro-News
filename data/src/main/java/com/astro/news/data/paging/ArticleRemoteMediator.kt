@@ -1,6 +1,6 @@
 package com.astro.news.data.paging
 
-import androidx.paging.ExperimentalPagingApi    
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
@@ -42,7 +42,12 @@ class ArticleRemoteMediator(
                     val nextKey = remoteKeys?.nextKey ?: return MediatorResult.Success(
                         endOfPaginationReached = remoteKeys != null
                     )
-                    nextKey
+
+                    if (remoteKeys.prevKey == null && state.pages.sumOf { it.data.size } > state.config.pageSize) {
+                        state.pages.sumOf { it.data.size }
+                    } else {
+                        nextKey
+                    }
                 }
             }
 
