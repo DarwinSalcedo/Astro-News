@@ -16,32 +16,6 @@ data class ArticleEntity(
     val publishedAt: String,
     val updatedAt: String,
     val featured: Boolean
-) {
-    fun toDomain(): Article {
-        return Article(
-            id = id,
-            title = title,
-            url = url,
-            imageUrl = imageUrl,
-            newsSite = newsSite,
-            summary = summary,
-            publishedAt = publishedAt,
-            updatedAt = updatedAt,
-            featured = featured
-        )
-    }
-}
+)
 
-fun Article.toEntity(): ArticleEntity {
-    return ArticleEntity(
-        id = id,
-        title = title,
-        url = url,
-        imageUrl = imageUrl,
-        newsSite = newsSite,
-        summary = summary,
-        publishedAt = publishedAt,
-        updatedAt = updatedAt,
-        featured = featured
-    )
-}
+

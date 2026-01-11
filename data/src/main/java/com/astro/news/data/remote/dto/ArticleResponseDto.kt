@@ -5,18 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ArticleResponseDto(
-    @SerialName("count")
-    val count: Int,
-    @SerialName("next")
-    val next: String?,
-    @SerialName("previous")
-    val previous: String?,
-    @SerialName("results")
-    val results: List<ArticleDto>
-)
-
-@Serializable
-data class ArticleDto(
     @SerialName("id")
     val id: Int,
     @SerialName("title")
