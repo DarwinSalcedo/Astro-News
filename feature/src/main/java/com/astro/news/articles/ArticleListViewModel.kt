@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.astro.news.core.network.NetworkMonitor
 import com.astro.news.domain.model.Article
 import com.astro.news.domain.usecase.GetArticlesUseCase
 import com.astro.news.domain.usecase.SearchArticlesUseCase
-import com.astro.news.core.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 @HiltViewModel
 class ArticleListViewModel @Inject constructor(
@@ -32,11 +32,17 @@ class ArticleListViewModel @Inject constructor(
     private val searchArticlesUseCase: SearchArticlesUseCase,
     networkMonitor: NetworkMonitor
 ) : ViewModel() {
+    companion object {
+        const val NO_DELAY = 0L
+        const val LONG_DELAY = 800L
+        const val MEDIUM_DELAY = 300L
+    }
+
     private val _effects = Channel<ArticleListEffect>()
     val effects = _effects.receiveAsFlow()
     private val _state = MutableStateFlow(ArticleListState())
     val state: StateFlow<ArticleListState> = _state.asStateFlow()
-    
+
     val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -44,7 +50,11 @@ class ArticleListViewModel @Inject constructor(
         .map { it.searchQuery }
         .distinctUntilChanged()
         .debounce { query ->
-            if (query.isBlank()) 0L else 500L
+            when {
+                query.isBlank() -> NO_DELAY
+                query.length < 3 -> LONG_DELAY
+                else -> MEDIUM_DELAY
+            }
         }
         .flatMapLatest { query ->
             if (query.isBlank()) {
