@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.astro.feature.R
 import com.astro.news.articles.ArticleListEffect
 import com.astro.news.articles.ArticleListEvent
@@ -123,7 +124,10 @@ fun ArticleListScreen(
                         .weight(1f)
                         .nestedScroll(pullToRefreshState.nestedScrollConnection)
                 ) {
-                    items(articles.itemCount) { index ->
+                    items(
+                        count = articles.itemCount,
+                        key = articles.itemKey { it.id }
+                    ) { index ->
                         val article = articles[index]
                         article?.let {
                             ArticleItem(
@@ -178,7 +182,13 @@ fun ArticleListScreen(
                 }
             }
 
-            if (articles.loadState.refresh is LoadState.NotLoading && articles.itemCount == 0) {
+            AnimatedVisibility(
+                visible = articles.loadState.refresh is LoadState.NotLoading &&
+                        articles.itemCount == 0 &&
+                        articles.loadState.append.endOfPaginationReached,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
                 EmptyUi()
             }
 
