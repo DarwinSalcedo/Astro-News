@@ -12,4 +12,6 @@
     <string name="error_client">Client error. Please update the app.</string>
     <string name="error_not_found">Content not found.</string>
     <string name="astro_news">Astro News</string>
+    <string name="no_results_found">No results found</string>
+    <string name="scroll_to_top">Scroll to top</string>
 </resources>

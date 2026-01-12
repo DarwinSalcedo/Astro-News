@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -182,6 +183,25 @@ fun ArticleListScreen(
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 
+            if (articles.loadState.refresh is LoadState.NotLoading && articles.itemCount == 0) {
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = stringResource(R.string.no_results_found),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             AnimatedVisibility(
                 visible = showScrollToTop,
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
@@ -201,7 +221,7 @@ fun ArticleListScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowUp,
-                        contentDescription = "Scroll to top"
+                        contentDescription = stringResource(R.string.scroll_to_top)
                     )
                 }
             }
