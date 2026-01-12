@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.astro.news.data.local.AstroDatabase
 import com.astro.news.data.mapper.toDomain
-import com.astro.news.data.paging.ArticleRemoteMediator
+import com.astro.news.data.paging.ArticleMediatorFactory
 import com.astro.news.data.remote.SpaceflightNewsApiService
 import com.astro.news.domain.exception.NotFoundArticleException
 import com.astro.news.domain.model.Article
@@ -21,8 +21,8 @@ import javax.inject.Inject
 import timber.log.Timber
 
 class ArticleRepositoryImpl @Inject constructor(
-    private val api: SpaceflightNewsApiService,
     private val database: AstroDatabase,
+    private val mediatorFactory: ArticleMediatorFactory
 ) : ArticleRepository {
     companion object {
         const val PAGE_SIZE = 20
@@ -41,11 +41,7 @@ class ArticleRepositoryImpl @Inject constructor(
                 prefetchDistance = PREFETCH_DISTANCE,
                 enablePlaceholders = false
             ),
-            remoteMediator = ArticleRemoteMediator(
-                api = api,
-                database = database,
-                query = query
-            ),
+            remoteMediator = mediatorFactory.getMediator(query),
             pagingSourceFactory = {
                 if (query.isNullOrEmpty()) {
                     database.articleDao.pagingSource()
