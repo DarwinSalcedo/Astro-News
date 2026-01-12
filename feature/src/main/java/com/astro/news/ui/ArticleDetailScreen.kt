@@ -47,6 +47,7 @@ import com.astro.feature.R
 import com.astro.news.detail.ArticleDetailEffect
 import com.astro.news.detail.ArticleDetailEvent
 import com.astro.news.detail.ArticleDetailViewModel
+import com.astro.news.util.formatRelativeTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,7 +157,7 @@ fun ArticleDetailScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = article.publishedAt,
+                            text = formatRelativeTime(context, article.publishedAt),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         )

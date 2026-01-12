@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.astro.news.domain.model.Article
+import com.astro.news.util.formatRelativeTime
 
 @Composable
 fun ArticleItem(
@@ -98,7 +99,7 @@ fun ArticleItem(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = article.publishedAt,
+                    text = formatRelativeTime(LocalContext.current, article.publishedAt),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.8f)
                 )
