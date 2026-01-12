@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.astro.news.data.local.AstroDatabase
 import com.astro.news.data.mapper.toDomain
+import com.astro.news.data.mapper.toEntity
 import com.astro.news.data.paging.ArticleMediatorFactory
 import com.astro.news.data.remote.SpaceflightNewsApiService
 import com.astro.news.domain.exception.NotFoundArticleException
@@ -21,6 +22,7 @@ import javax.inject.Inject
 import timber.log.Timber
 
 class ArticleRepositoryImpl @Inject constructor(
+    private val api: SpaceflightNewsApiService,
     private val database: AstroDatabase,
     private val mediatorFactory: ArticleMediatorFactory
 ) : ArticleRepository {
@@ -58,13 +60,24 @@ class ArticleRepositoryImpl @Inject constructor(
 
     override suspend fun getArticle(id: Int): Result<Article> = withContext(Dispatchers.IO) {
         Timber.tag("ArticleRepository").d("Fetching article details for ID: $id")
-        val article = database.articleDao.getArticleById(id)
-        if(article != null) {
-            Timber.tag("ArticleRepository").d("Article found locally for ID: $id")
-            Result.Success(article.toDomain())
+        
+        val cachedArticle = database.articleDao.getArticleById(id)
+        if (cachedArticle != null) {
+            Timber.tag("ArticleRepository").d("Article $id found in cache")
+            return@withContext Result.Success(cachedArticle.toDomain())
         }
-        else {
-            Timber.tag("ArticleRepository").w("Article NOT found locally for ID: $id")
+        
+        try {
+            Timber.tag("ArticleRepository").d("Article $id not in cache, fetching from API")
+            val articleDto = api.getArticleById(id)
+            val entity = articleDto.toEntity()
+            
+            database.articleDao.insertAll(listOf(entity))
+            Timber.tag("ArticleRepository").d("Article $id fetched from API and cached")
+            
+            Result.Success(entity.toDomain())
+        } catch (e: Exception) {
+            Timber.tag("ArticleRepository").e(e, "Failed to fetch article $id from API")
             Result.Error(NotFoundArticleException(id.toString()))
         }
     }
