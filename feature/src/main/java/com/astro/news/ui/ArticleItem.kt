@@ -1,15 +1,13 @@
-package com.astro.news.ui.components
+package com.astro.news.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -18,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -44,7 +41,6 @@ fun ArticleItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Background Image
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(article.imageUrl)
@@ -55,7 +51,6 @@ fun ArticleItem(
                 modifier = Modifier.fillMaxSize()
             )
 
-            // Gradient Overlay for text readability
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -70,13 +65,11 @@ fun ArticleItem(
                     )
             )
 
-            // Content
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(16.dp)
             ) {
-                // News Site Badge
                 Text(
                     text = article.newsSite,
                     style = MaterialTheme.typography.labelMedium,
@@ -91,7 +84,6 @@ fun ArticleItem(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Title
                 Text(
                     text = article.title,
                     style = MaterialTheme.typography.titleLarge.copy(
@@ -105,9 +97,8 @@ fun ArticleItem(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Published Date
                 Text(
-                    text = article.publishedAt, // Improved formatting can be done in VM or Model
+                    text = article.publishedAt,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.8f)
                 )
