@@ -1,12 +1,12 @@
 package com.astro.feature
 
 import androidx.paging.PagingData
-import com.astro.feature.util.MainDispatcherRule
 import com.astro.news.articles.ArticleListEffect
 import com.astro.news.articles.ArticleListEvent
 import com.astro.news.articles.ArticleListViewModel
 import com.astro.news.domain.usecase.GetArticlesUseCase
 import com.astro.news.domain.usecase.SearchArticlesUseCase
+import com.astro.news.util.MainDispatcherRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -42,18 +42,19 @@ class ArticleListViewModelTest {
 
 
     @Test
-    fun `Given search query, When OnSearchQueryChange event, Then state updates and calls SearchArticlesUseCase`() = runTest {
-        val query = "query"
+    fun `Given search query, When OnSearchQueryChange event, Then state updates and calls SearchArticlesUseCase`() =
+        runTest {
+            val query = "query"
 
-        viewModel.onEvent(ArticleListEvent.OnSearchQueryChange(query))
+            viewModel.onEvent(ArticleListEvent.OnSearchQueryChange(query))
 
-        Assert.assertEquals(query, viewModel.state.value.searchQuery)
+            Assert.assertEquals(query, viewModel.state.value.searchQuery)
 
-        viewModel.articles.first()
+            viewModel.articles.first()
 
-        verify(exactly = 1) { searchArticlesUseCase(query) }
+            verify(exactly = 1) { searchArticlesUseCase(query) }
 
-    }
+        }
 
     @Test
     fun `When OnRetry event, Then emits Retry effect`() = runTest {

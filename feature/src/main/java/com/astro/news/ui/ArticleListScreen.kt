@@ -1,7 +1,7 @@
 package com.astro.news.ui
 
-import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +27,10 @@ import com.astro.news.articles.ArticleListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleListScreen(viewModel: ArticleListViewModel = hiltViewModel()) {
+fun ArticleListScreen(
+    viewModel: ArticleListViewModel = hiltViewModel(),
+    onNavigateToDetail: (Int) -> Unit
+) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val articles = viewModel.articles.collectAsLazyPagingItems()
         val state = viewModel.state.collectAsStateWithLifecycle()
@@ -42,8 +45,7 @@ fun ArticleListScreen(viewModel: ArticleListViewModel = hiltViewModel()) {
                     }
 
                     is ArticleListEffect.NavigateToDetail -> {
-                        // todo Navigate to detail screen
-                        Log.d("MainActivity", "Navigate to article ${effect.articleId}")
+                        onNavigateToDetail(effect.articleId)
                     }
                 }
             }
@@ -121,10 +123,10 @@ fun ArticleListScreen(viewModel: ArticleListViewModel = hiltViewModel()) {
 
                             loadState.refresh is LoadState.Error -> {
                                 item {
-                                    androidx.compose.foundation.layout.Column(
+                                    Column(
                                         modifier = Modifier.fillParentMaxSize(),
                                         horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                                        verticalArrangement = Arrangement.Center
                                     ) {
                                         Text(text = "Error loading articles")
                                         androidx.compose.material3.Button(

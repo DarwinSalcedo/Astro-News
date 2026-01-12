@@ -1,4 +1,4 @@
-package com.astro.feature.util
+package com.astro.news.util
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
