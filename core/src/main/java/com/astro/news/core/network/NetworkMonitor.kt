@@ -23,7 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class NetworkMonitor @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+) : NetworkMonitorInterface {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -58,7 +58,7 @@ class NetworkMonitor @Inject constructor(
             }
         }
 
-    val isOnline: StateFlow<Boolean> = networkCallback.stateIn(
+    override val isOnline: Flow<Boolean> = networkCallback.stateIn(
         scope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = isCurrentlyConnected()
@@ -70,4 +70,8 @@ class NetworkMonitor @Inject constructor(
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
+}
+
+interface NetworkMonitorInterface{
+    val isOnline: Flow<Boolean>
 }

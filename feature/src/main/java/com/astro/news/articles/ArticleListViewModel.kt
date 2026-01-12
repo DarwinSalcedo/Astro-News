@@ -30,7 +30,7 @@ import javax.inject.Inject
 class ArticleListViewModel @Inject constructor(
     private val getArticlesUseCase: GetArticlesUseCase,
     private val searchArticlesUseCase: SearchArticlesUseCase,
-    networkMonitor: NetworkMonitor
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
     companion object {
         const val NO_DELAY = 0L
@@ -43,7 +43,7 @@ class ArticleListViewModel @Inject constructor(
     private val _state = MutableStateFlow(ArticleListState())
     val state: StateFlow<ArticleListState> = _state.asStateFlow()
 
-    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
+    val isOnline: Flow<Boolean> = networkMonitor.isOnline
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val articles: Flow<PagingData<Article>> = _state

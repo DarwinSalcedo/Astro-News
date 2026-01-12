@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.astro.news.articles.ArticleListEffect
 import com.astro.news.articles.ArticleListEvent
 import com.astro.news.articles.ArticleListViewModel
+import com.astro.news.core.network.NetworkMonitor
 import com.astro.news.domain.usecase.GetArticlesUseCase
 import com.astro.news.domain.usecase.SearchArticlesUseCase
 import com.astro.news.util.MainDispatcherRule
@@ -27,17 +28,21 @@ class ArticleListViewModelTest {
 
     private lateinit var getArticlesUseCase: GetArticlesUseCase
     private lateinit var searchArticlesUseCase: SearchArticlesUseCase
+    private lateinit var networkMonitor: NetworkMonitor
     private lateinit var viewModel: ArticleListViewModel
 
     @Before
     fun setUp() {
         getArticlesUseCase = mockk()
         searchArticlesUseCase = mockk()
+        networkMonitor = mockk()
 
         every { getArticlesUseCase() } returns flowOf(PagingData.empty())
         every { searchArticlesUseCase(any()) } returns flowOf(PagingData.empty())
+        every {  networkMonitor.isOnline } returns mockk()
 
-        viewModel = ArticleListViewModel(getArticlesUseCase, searchArticlesUseCase)
+
+        viewModel = ArticleListViewModel(getArticlesUseCase, searchArticlesUseCase,networkMonitor)
     }
 
 

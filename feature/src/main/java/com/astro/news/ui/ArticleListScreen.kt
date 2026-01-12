@@ -56,7 +56,7 @@ fun ArticleListScreen(
 ) {
     val articles = viewModel.articles.collectAsLazyPagingItems()
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnline.collectAsStateWithLifecycle(true)
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
