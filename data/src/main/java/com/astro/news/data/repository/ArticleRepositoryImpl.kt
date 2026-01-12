@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import timber.log.Timber
 
 class ArticleRepositoryImpl @Inject constructor(
     private val api: SpaceflightNewsApiService,
@@ -60,10 +61,16 @@ class ArticleRepositoryImpl @Inject constructor(
 
 
     override suspend fun getArticle(id: Int): Result<Article> = withContext(Dispatchers.IO) {
+        Timber.tag("ArticleRepository").d("Fetching article details for ID: $id")
         val article = database.articleDao.getArticleById(id)
-        if(article != null) Result.Success(article.toDomain())
-        else
+        if(article != null) {
+            Timber.tag("ArticleRepository").d("Article found locally for ID: $id")
+            Result.Success(article.toDomain())
+        }
+        else {
+            Timber.tag("ArticleRepository").w("Article NOT found locally for ID: $id")
             Result.Error(NotFoundArticleException(id.toString()))
+        }
     }
 
 }

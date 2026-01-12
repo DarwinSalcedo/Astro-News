@@ -11,6 +11,7 @@ import com.astro.news.data.local.entity.RemoteKeysEntity
 import com.astro.news.data.mapper.toEntity
 import com.astro.news.data.remote.SpaceflightNewsApiService
 import com.astro.news.domain.exception.mapToDomainError
+import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
 class ArticleRemoteMediator(
@@ -24,6 +25,7 @@ class ArticleRemoteMediator(
         state: PagingState<Int, ArticleEntity>
     ): MediatorResult {
         return try {
+            Timber.tag("ArticleRemoteMediator").d("Loading data: LoadType = $loadType")
             val offset = when (loadType) {
                 LoadType.REFRESH -> {
                     val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
@@ -63,6 +65,7 @@ class ArticleRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
+                    Timber.tag("ArticleRemoteMediator").d("Clearing database for Refresh")
                     database.remoteKeysDao.clearRemoteKeys()
                     database.articleDao.clearAll()
                 }
@@ -82,10 +85,12 @@ class ArticleRemoteMediator(
 
                 database.remoteKeysDao.insertAll(keys)
                 database.articleDao.insertAll(entities)
+                Timber.tag("ArticleRemoteMediator").d("Inserted ${articles.size} articles successfully")
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: Exception) {
+            Timber.tag("ArticleRemoteMediator").e(e, "Error during load")
             MediatorResult.Error(mapToDomainError(e))
         }
     }

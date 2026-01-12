@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
 class ArticleListViewModel @Inject constructor(
@@ -54,17 +55,20 @@ class ArticleListViewModel @Inject constructor(
     fun onEvent(event: ArticleListEvent) {
         when (event) {
             is ArticleListEvent.OnSearchQueryChange -> {
+                Timber.d("OnSearchQueryChange: ${event.query}")
                 _state.update { it.copy(searchQuery = event.query) }
             }
 
             ArticleListEvent.OnRetry -> {
                 viewModelScope.launch {
+                    Timber.d("OnRetry triggered")
                     _effects.send(ArticleListEffect.Retry)
                 }
             }
 
             is ArticleListEvent.OnArticleClick -> {
                 viewModelScope.launch {
+                    Timber.d("Navigating to article: ${event.articleId}")
                     _effects.send(ArticleListEffect.NavigateToDetail(event.articleId))
                 }
             }

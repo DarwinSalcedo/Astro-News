@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.astro.news.util.asStringRes
 import javax.inject.Inject
+import timber.log.Timber
 
 @HiltViewModel
 class ArticleDetailViewModel @Inject constructor(
@@ -48,16 +49,19 @@ class ArticleDetailViewModel @Inject constructor(
 
     private fun loadArticle(id: Int) {
         viewModelScope.launch {
+            Timber.d("Loading article detail for ID: $id")
             _state.update { it.copy(isLoading = true, error = null) }
 
             when (val result = getArticleDetailUseCase(id)) {
                 is Result.Success -> {
+                    Timber.d("Article loaded successfully: ${result.data.title}")
                     _state.update { it.copy(isLoading = false, article = result.data) }
                 }
 
 
                 is Result.Error -> {
                      val error = result.exception
+                    Timber.e(error, "Error loading article detail")
                     _state.update {
                         it.copy(
                             isLoading = false,
