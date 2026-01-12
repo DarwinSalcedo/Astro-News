@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.hilt.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -22,4 +24,14 @@ android {
 
 dependencies{
     implementation(libs.androidx.paging.runtime)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.android)
+
+    implementation(libs.retrofit)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

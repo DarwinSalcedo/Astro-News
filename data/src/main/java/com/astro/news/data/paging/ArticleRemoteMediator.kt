@@ -10,8 +10,7 @@ import com.astro.news.data.local.entity.ArticleEntity
 import com.astro.news.data.local.entity.RemoteKeysEntity
 import com.astro.news.data.mapper.toEntity
 import com.astro.news.data.remote.SpaceflightNewsApiService
-import retrofit2.HttpException
-import java.io.IOException
+import com.astro.news.domain.exception.mapToDomainError
 
 @OptIn(ExperimentalPagingApi::class)
 class ArticleRemoteMediator(
@@ -30,6 +29,7 @@ class ArticleRemoteMediator(
                     val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                     remoteKeys?.nextKey?.minus(state.config.pageSize) ?: 0
                 }
+
                 LoadType.PREPEND -> {
                     val remoteKeys = getRemoteKeyForFirstItem(state)
                     val prevKey = remoteKeys?.prevKey ?: return MediatorResult.Success(
@@ -37,6 +37,7 @@ class ArticleRemoteMediator(
                     )
                     prevKey
                 }
+
                 LoadType.APPEND -> {
                     val remoteKeys = getRemoteKeyForLastItem(state)
                     val nextKey = remoteKeys?.nextKey ?: return MediatorResult.Success(
@@ -84,10 +85,8 @@ class ArticleRemoteMediator(
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (e: IOException) {
-            MediatorResult.Error(e)
-        } catch (e: HttpException) {
-            MediatorResult.Error(e)
+        } catch (e: Exception) {
+            MediatorResult.Error(mapToDomainError(e))
         }
     }
 
@@ -98,9 +97,10 @@ class ArticleRemoteMediator(
     }
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ArticleEntity>): RemoteKeysEntity? {
-        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()?.let { article ->
-            database.remoteKeysDao.remoteKeysArticleId(article.id)
-        }
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
+            ?.let { article ->
+                database.remoteKeysDao.remoteKeysArticleId(article.id)
+            }
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ArticleEntity>): RemoteKeysEntity? {
