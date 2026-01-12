@@ -23,3 +23,6 @@ A sample Android application for browsing spaceflight news, built with **Jetpack
 -   **Pagination**: Paging 3 (with `RemoteMediator` for caching)
 -   **Image Loading**: Coil
 
+<img width="308" height="663" alt="Screenshot 2026-01-12 at 2 55 38 AM" src="https://github.com/user-attachments/assets/691417d9-fe17-42e2-9a5d-580038620914" />
+<img width="313" height="670" alt="Screenshot 2026-01-12 at 2 58 25 AM" src="https://github.com/user-attachments/assets/29edfea0-329e-42cf-bb11-f48c1a561a22" />
+<img width="309" height="664" alt="Screenshot 2026-01-12 at 2 58 09 AM" src="https://github.com/user-attachments/assets/720cd279-31f1-4d71-89ad-249a748058b3" />
