@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_articles">Search articles...</string>
+    <string name="clear_search">Clear search</string>
+    <string name="error_loading_articles">Error loading articles</string>
+    <string name="retry">Retry</string>
+    <string name="read_full_article">Read Full Article</string>
+    <string name="back">Back</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="error_network">No internet connection. Please check your network.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_client">Client error. Please update the app.</string>
+    <string name="error_not_found">Content not found.</string>
+</resources>

@@ -22,23 +22,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.astro.feature.R
 import com.astro.news.detail.ArticleDetailEffect
 import com.astro.news.detail.ArticleDetailEvent
 import com.astro.news.detail.ArticleDetailViewModel
@@ -52,6 +57,7 @@ fun ArticleDetailScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(articleId) {
         viewModel.onEvent(ArticleDetailEvent.LoadArticle(articleId))
@@ -63,18 +69,21 @@ fun ArticleDetailScreen(
                 is ArticleDetailEffect.NavigateBack -> {
                     onBack()
                 }
+
                 is ArticleDetailEffect.OpenBrowser -> {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(effect.url))
                     context.startActivity(intent)
                 }
+
                 is ArticleDetailEffect.ShowError -> {
-                    // TODO: Show Snackbar
+                    snackbarHostState.showSnackbar(context.getString(effect.messageId))
                 }
             }
         }
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {},
@@ -82,7 +91,7 @@ fun ArticleDetailScreen(
                     IconButton(onClick = { viewModel.onEvent(ArticleDetailEvent.OnBackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color.White
                         )
                     }
@@ -135,7 +144,7 @@ fun ArticleDetailScreen(
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.primary
                         )
-                        
+
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
@@ -166,9 +175,9 @@ fun ArticleDetailScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text(text = "Read Full Article")
+                            Text(text = stringResource(R.string.read_full_article))
                         }
-                        
+
                         Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding()))
                     }
                 }
@@ -176,7 +185,7 @@ fun ArticleDetailScreen(
 
             if (state.error != null) {
                 Text(
-                    text = state.error ?: "Unknown Error",
+                    text = stringResource(state.error?: R.string.unknown_error),
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.Center)
                 )

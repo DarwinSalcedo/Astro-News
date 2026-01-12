@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 
+import androidx.compose.ui.res.stringResource
+import com.astro.feature.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarUi(
@@ -28,7 +31,7 @@ fun SearchBarUi(
         onSearch = { },
         active = false,
         onActiveChange = { },
-        placeholder = { Text("Search articles...") },
+        placeholder = { Text(stringResource(R.string.search_articles)) },
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -42,7 +45,7 @@ fun SearchBarUi(
                         onSearch(query)
                     },
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Clear search"
+                    contentDescription = stringResource(R.string.clear_search)
                 )
             }
         },

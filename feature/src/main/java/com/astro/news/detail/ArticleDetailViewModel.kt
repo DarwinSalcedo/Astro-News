@@ -1,5 +1,6 @@
 package com.astro.news.detail
 
+import ArticleDetailState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.astro.news.domain.usecase.GetArticleDetailUseCase
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.astro.news.util.asStringRes
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +29,7 @@ class ArticleDetailViewModel @Inject constructor(
 
     fun onEvent(event: ArticleDetailEvent) {
         when (event) {
+
             is ArticleDetailEvent.LoadArticle -> {
                 loadArticle(event.articleId)
             }
@@ -38,6 +41,8 @@ class ArticleDetailViewModel @Inject constructor(
             ArticleDetailEvent.OnBackClick -> {
                 sendEffect(ArticleDetailEffect.NavigateBack)
             }
+
+
         }
     }
 
@@ -49,15 +54,17 @@ class ArticleDetailViewModel @Inject constructor(
                 is Result.Success -> {
                     _state.update { it.copy(isLoading = false, article = result.data) }
                 }
+
+
                 is Result.Error -> {
                      val error = result.exception
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            error = error.localizedMessage ?: "Unknown error"
+                            error = error.asStringRes()
                         )
                     }
-                    sendEffect(ArticleDetailEffect.ShowError(error.localizedMessage ?: "Error loading article"))
+                    sendEffect(ArticleDetailEffect.ShowError(error.asStringRes()))
                 }
                 Result.Loading -> {}
             }

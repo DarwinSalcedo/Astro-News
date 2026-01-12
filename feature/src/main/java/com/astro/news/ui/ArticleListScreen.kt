@@ -23,6 +23,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.astro.news.articles.ArticleListEffect
 import com.astro.news.articles.ArticleListEvent
 import com.astro.news.articles.ArticleListViewModel
+import androidx.compose.ui.res.stringResource
+import com.astro.feature.R
+import com.astro.news.util.asStringRes
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,20 +124,23 @@ fun ArticleListScreen(
                                 }
                             }
 
+
+
                             loadState.refresh is LoadState.Error -> {
+                                val errorState = loadState.refresh as LoadState.Error
                                 item {
                                     Column(
                                         modifier = Modifier.fillParentMaxSize(),
                                         horizontalAlignment = Alignment.CenterHorizontally,
                                         verticalArrangement = Arrangement.Center
                                     ) {
-                                        Text(text = "Error loading articles")
+                                        Text(text = stringResource(errorState.error.asStringRes()))
                                         androidx.compose.material3.Button(
                                             onClick = {
                                                 viewModel.onEvent(ArticleListEvent.OnRetry)
                                             }
                                         ) {
-                                            Text(text = "Retry")
+                                            Text(text = stringResource(R.string.retry))
                                         }
                                     }
                                 }

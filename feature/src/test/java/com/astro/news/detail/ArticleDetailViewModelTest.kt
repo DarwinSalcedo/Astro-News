@@ -9,6 +9,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import com.astro.feature.R
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -50,6 +51,8 @@ class ArticleDetailViewModelTest {
             assertEquals(null, state.error)
         }
 
+
+
     @Test
     fun `Given article ID, When LoadArticle event, Then state updates with error on failure`() =
         runTest {
@@ -70,7 +73,7 @@ class ArticleDetailViewModelTest {
             val state = viewModel.state.value
             assertEquals(null, state.article)
             assertEquals(false, state.isLoading)
-            assertEquals(errorMessage, state.error)
+            assertEquals(R.string.unknown_error, state.error)
 
         }
 

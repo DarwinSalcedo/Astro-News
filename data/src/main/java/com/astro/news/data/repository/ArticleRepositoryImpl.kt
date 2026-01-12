@@ -13,8 +13,10 @@ import com.astro.news.domain.exception.NotFoundArticleException
 import com.astro.news.domain.model.Article
 import com.astro.news.domain.repository.ArticleRepository
 import com.astro.news.domain.util.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ArticleRepositoryImpl @Inject constructor(
@@ -55,9 +57,11 @@ class ArticleRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getArticle(id: Int): Result<Article> {
+
+
+    override suspend fun getArticle(id: Int): Result<Article> = withContext(Dispatchers.IO) {
         val article = database.articleDao.getArticleById(id)
-        return if(article != null) Result.Success(article.toDomain())
+        if(article != null) Result.Success(article.toDomain())
         else
             Result.Error(NotFoundArticleException(id.toString()))
     }
