@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.astro.news.domain.model.Article
 import com.astro.news.domain.usecase.GetArticlesUseCase
 import com.astro.news.domain.usecase.SearchArticlesUseCase
+import com.astro.news.core.network.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -28,12 +29,15 @@ import timber.log.Timber
 @HiltViewModel
 class ArticleListViewModel @Inject constructor(
     private val getArticlesUseCase: GetArticlesUseCase,
-    private val searchArticlesUseCase: SearchArticlesUseCase
+    private val searchArticlesUseCase: SearchArticlesUseCase,
+    networkMonitor: NetworkMonitor
 ) : ViewModel() {
     private val _effects = Channel<ArticleListEffect>()
     val effects = _effects.receiveAsFlow()
     private val _state = MutableStateFlow(ArticleListState())
     val state: StateFlow<ArticleListState> = _state.asStateFlow()
+    
+    val isOnline: StateFlow<Boolean> = networkMonitor.isOnline
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val articles: Flow<PagingData<Article>> = _state
